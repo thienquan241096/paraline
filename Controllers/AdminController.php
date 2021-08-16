@@ -14,13 +14,27 @@ class AdminController extends BaseController
     {
         if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
             $modelAdmin = new AdminModel();
-            $listAdmin = $modelAdmin->all();
+            $listAdmin = $modelAdmin::all();
             $this->render('list', compact('listAdmin'));
         } else {
             ob_start();
             header("Location:?controller=login&action=login");
         }
     }
+
+    public function postSearch()
+    {
+        if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
+            $modelAdmin = new AdminModel();
+            $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : "";
+            $listAdmin = $modelAdmin::search('name', 'email', 'like', "%$keyword%");
+            $this->render('listSearch', compact('listAdmin'));
+        } else {
+            ob_start();
+            header("Location:?controller=login&action=login");
+        }
+    }
+
 
     public function getInsert()
     {
@@ -36,8 +50,7 @@ class AdminController extends BaseController
     {
         $modelAdmin = new AdminModel();
         if (isset($_FILES['avatar'])) {
-            $target_dir = "public/image/"; //định nghĩa đường dẫn
-            $target_file = $target_dir . basename($_FILES["avatar"]["name"]); //tên file
+            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]); //tên file
             // var_dump($target_file);
             $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file); //chuyển vào thư mục Public/image
         }
@@ -54,7 +67,7 @@ class AdminController extends BaseController
             'upd_datetime' => UPD_DATETIME,
             'del_flag' => DEL_FALG,
         ];
-        $modelAdmin->insert($data);
+        $modelAdmin::insert($data);
         header("Location:?controller=admin&action=list");
     }
 
@@ -74,8 +87,6 @@ class AdminController extends BaseController
     {
         $modelAdmin = new AdminModel();
         $detail = $modelAdmin->find($_GET['id']);
-        // var_dump($detail->avatar);
-        // die;
         if ($_FILES['avatar']['name'] == "") {
             $target_file = $detail->avatar;
         } else {

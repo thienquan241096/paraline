@@ -15,9 +15,10 @@
 <body>
 
     <div class="container">
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/paraline">Navbar</a>
+                <a class="navbar-brand" href="/paraline">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -42,11 +43,14 @@
                         </li>
                     </ul>
                 </div>
+                <!-- <form class="d-flex" action="?controller=admin&action=postSearch" method="POST">
+                    <input class="form-control me-2" type="search" placeholder="Search" name="keyword">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form> -->
             </div>
-        </nav>
-        <div class="content">
-            <?= @$content ?>
-        </div>
+    </div>
+    <div class="content container">
+        <?= @$content ?>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">

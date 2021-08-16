@@ -113,6 +113,18 @@ class BaseModel
         return $id;
     }
 
+    public static function search($colName = COL_NAME, $colEmail = COL_EMAIL, $condition, $searchValue, $del_flag = DEL_FALG)
+    {
+        $model = new static();
+        $query = "SELECT * FROM " . $model->table_name . " WHERE del_flag = $del_flag AND ($colName $condition '$searchValue'
+        OR $colEmail $condition '$searchValue') ";
+        $stmt = $model->conn->prepare($query);
+        // var_dump($stmt);
+        // die;
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function get()
     {
         $stmt = $this->conn->prepare($this->query);
@@ -120,6 +132,8 @@ class BaseModel
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this));
         return $stmt->fetchAll();
     }
+
+
 
     public function getOne()
     {
@@ -134,9 +148,9 @@ class BaseModel
         $model = new static();
         $model->query = "SELECT * FROM {$model->table_name} WHERE email = '$email' AND del_flag = $del_flag";
         $result = $model->getOne();
-        echo '<pre>';
-        var_dump($result);
-        echo '</pre>';
+        // echo '<pre>';
+        // var_dump($result);
+        // echo '</pre>';
         return $result;
     }
 
@@ -145,9 +159,6 @@ class BaseModel
         $model = new static();
         $model->query = "SELECT * FROM {$model->table_name} WHERE email = '{$email}' AND password = '{$password}'";
         $result = $model->getOne();
-        // echo '<pre>';
-        // var_dump($result);
-        // echo '</pre>';
         return $result;
     }
 
