@@ -76,7 +76,7 @@ class UserController extends BaseController
         ];
 
         $modelUser->update($_GET['id'], $data);
-        $_SESSION['success_message'] = "Update thành công";
+        $_SESSION['success_message'] = UPDATE_SUCCESS_MESSAGE;
         header('Location:?controller=user&action=list');
     }
 
@@ -89,7 +89,7 @@ class UserController extends BaseController
                 'del_flag' => DESTROY,
             ];
             $modelUser->delete($_GET['id'], $data);
-            $_SESSION['success_message'] = "Xóa thành công";
+            $_SESSION['success_message'] = DELETE_SUCCESS_MESSAGE;
             header('Location:?controller=user&action=list');
         } else {
             ob_start();

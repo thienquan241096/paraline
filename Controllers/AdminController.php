@@ -69,7 +69,7 @@ class AdminController extends BaseController
 
         ];
         $modelAdmin::insert($data);
-        $_SESSION['success_message'] = "Thêm mới thành công";
+        $_SESSION['success_message'] = CREATE_SUCCESS_MESSAGE;
         header("Location:?controller=admin&action=list");
     }
 
@@ -111,7 +111,7 @@ class AdminController extends BaseController
         ];
 
         $modelAdmin->update($_GET['id'], $data);
-        $_SESSION['success_message'] = "Update thành công";
+        $_SESSION['success_message'] = UPDATE_SUCCESS_MESSAGE;
         header('Location:?controller=admin&action=list');
     }
 
@@ -125,7 +125,7 @@ class AdminController extends BaseController
                 'del_flag' => DESTROY,
             ];
             $modelAdmin->delete($_GET['id'], $data);
-            $_SESSION['success_message'] = "Xóa thành công";
+            $_SESSION['success_message'] = DELETE_SUCCESS_MESSAGE;
             header('Location:?controller=admin&action=list');
         } else {
             ob_start();

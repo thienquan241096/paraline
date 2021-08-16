@@ -9,6 +9,9 @@ define('STATUS', 1);
 define("TARGET_DIR", 'public/image/');
 define("COL_NAME", 'name');
 define("COL_EMAIL", 'email');
+define("CREATE_SUCCESS_MESSAGE", 'Thêm mới thành công');
+define("UPDATE_SUCCESS_MESSAGE", 'Update thành công');
+define("DELETE_SUCCESS_MESSAGE", 'Thêm mới thành công');
 
 define('DB_NAME', 'train_paraline');
 define('DB_USERNAME', 'root');
