@@ -1,9 +1,8 @@
 <?php
-require_once './common_const.php';
+require_once 'IBaseModel.php';
 
-class BaseModel
+class BaseModel implements IBaseModel
 {
-
     private $db_name;
     private $db_username;
     private $db_pass;
@@ -46,6 +45,13 @@ class BaseModel
     public static function insert($arr)
     {
         $model = new static();
+
+        $arr['ins_id'] = $_SESSION['admin']['id'];
+        $arr['upd_id'] = $_SESSION['admin']['id'];
+        $arr['ins_datetime'] = INS_DATETIME;
+        $arr['upd_datetime'] = UPD_DATETIME;
+        $arr['del_flag'] = DEL_FALG;
+
         $model->query = "INSERT INTO {$model->table_name} (";
         foreach ($arr as $key => $value) {
             $model->query .= "$key,";
@@ -56,6 +62,7 @@ class BaseModel
         foreach ($arr as $key => $value) {
             $model->query .= ":$key,";
         }
+
         $model->query = rtrim($model->query, ',');
         $model->query .= ')';
         $stmt = $model->conn->prepare($model->query);
@@ -68,6 +75,7 @@ class BaseModel
     {
         unset($params['id']);
         $model = new static();
+        $params['upd_datetime'] = UPD_DATETIME;
         $model->query = "UPDATE {$model->table_name} SET ";
         foreach ($params as $key => $value) {
             $model->query .= " $key = :$key, ";
@@ -98,6 +106,10 @@ class BaseModel
     {
         unset($params['id']);
         $model = new static();
+        $params['upd_id'] = $_SESSION['admin']['id'];
+        $params['upd_datetime'] = UPD_DATETIME;
+        $params['del_flag'] = DEL_FALG;
+
         $model->query = "UPDATE {$model->table_name} SET ";
         foreach ($params as $key => $value) {
             $model->query .= " $key = :$key, ";

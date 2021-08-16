@@ -5,14 +5,19 @@ require_once './Models/AdminModel.php';
 
 class AdminController extends BaseController
 {
+    private $roleAdmin;
+    // private $message;
+
     public function __construct()
     {
         $this->folder = 'admin';
+        $this->roleAdmin = $_SESSION['admin']['role_type'];
+        // $this->message = $_SESSION['success_message'];
     }
 
     public function list()
     {
-        if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
+        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
             $modelAdmin = new AdminModel();
             $listAdmin = $modelAdmin::all();
             $this->render('list', compact('listAdmin'));
@@ -24,7 +29,7 @@ class AdminController extends BaseController
 
     public function postSearch()
     {
-        if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
+        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
             $modelAdmin = new AdminModel();
             $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : "";
             $listAdmin = $modelAdmin::search('name', 'email', 'like', "%$keyword%");
@@ -38,7 +43,7 @@ class AdminController extends BaseController
 
     public function getInsert()
     {
-        if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
+        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
             $this->render('insert');
         } else {
             ob_start();
@@ -61,19 +66,16 @@ class AdminController extends BaseController
             'password' => isset($_POST['password']) ? md5($_POST['password']) : "",
             'avatar' => $target_file,
             'role_type' => $_POST['role_type'],
-            'ins_id' => $_SESSION['admin']['id'],
-            'upd_id' => $_SESSION['admin']['id'],
-            'ins_datetime' => INS_DATETIME,
-            'upd_datetime' => UPD_DATETIME,
-            'del_flag' => DEL_FALG,
+
         ];
         $modelAdmin::insert($data);
+        $_SESSION['success_message'] = "Thêm mới thành công";
         header("Location:?controller=admin&action=list");
     }
 
     public function getEdit()
     {
-        if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
+        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
 
             $modelAdmin = new AdminModel();
             $detail = $modelAdmin->find($_GET['id']);
@@ -106,28 +108,24 @@ class AdminController extends BaseController
             'password' => $password,
             'avatar' => $target_file,
             'role_type' => $_POST['role_type'],
-            'ins_id' => $detail->ins_id,
-            'upd_id' => $_SESSION['admin']['id'],
-            'ins_datetime' => $detail->ins_datetime,
-            'upd_datetime' => UPD_DATETIME,
-            'del_flag' => DEL_FALG,
         ];
 
         $modelAdmin->update($_GET['id'], $data);
+        $_SESSION['success_message'] = "Update thành công";
         header('Location:?controller=admin&action=list');
     }
 
     public function delete()
     {
-        if ($_SESSION['admin']["role_type"] == ROLE_TYPE_SUPPERADMIN) {
+        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
             $modelAdmin = new AdminModel();
             $detail = $modelAdmin->find($_GET['id']);
             $data = [
-                'upd_id' => $_SESSION['admin']['id'],
-                'upd_datetime' => UPD_DATETIME,
+                // 'upd_id' => $_SESSION['admin']['id'],
                 'del_flag' => DESTROY,
             ];
             $modelAdmin->delete($_GET['id'], $data);
+            $_SESSION['success_message'] = "Xóa thành công";
             header('Location:?controller=admin&action=list');
         } else {
             ob_start();

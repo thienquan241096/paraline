@@ -6,14 +6,16 @@ require_once './Models/UserModel.php';
 
 class UserController extends BaseController
 {
+    private $roleAdmin;
     public function __construct()
     {
         $this->folder = 'user';
+        $this->roleAdmin = $_SESSION['admin'];
     }
 
     public function list()
     {
-        if (isset($_SESSION['admin'])) {
+        if (isset($this->roleAdmin)) {
             $modelUser = new UserModel();
             $listUser = $modelUser->all();
             // echo '<pre>';
@@ -28,7 +30,7 @@ class UserController extends BaseController
 
     public function postSearch()
     {
-        if (isset($_SESSION['admin'])) {
+        if (isset($this->roleAdmin)) {
             $modelUser = new UserModel();
             $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : "";
             $listUser = $modelUser->search('name', 'email', 'like', "%$keyword%");
@@ -43,7 +45,7 @@ class UserController extends BaseController
 
     public function getEdit()
     {
-        if ($_SESSION['admin']) {
+        if ($this->roleAdmin) {
 
             $modelUser = new UserModel();
             $detail = $modelUser->find($_GET['id']);
@@ -71,28 +73,23 @@ class UserController extends BaseController
             'email' => $_POST['email'],
             'avatar' => $target_file,
             'status' => $_POST['status'],
-            'ins_id' => $detail->ins_id,
-            'upd_id' => $_SESSION['admin']['id'],
-            'ins_datetime' => $detail->ins_datetime,
-            'upd_datetime' => UPD_DATETIME,
-            'del_flag' => DEL_FALG,
         ];
 
         $modelUser->update($_GET['id'], $data);
+        $_SESSION['success_message'] = "Update thành công";
         header('Location:?controller=user&action=list');
     }
 
     public function delete()
     {
-        if ($_SESSION['admin']) {
+        if ($this->roleAdmin) {
             $modelUser = new UserModel();
             $detail = $modelUser->find($_GET['id']);
             $data = [
-                'upd_id' => $_SESSION['admin']['id'],
-                'upd_datetime' => UPD_DATETIME,
                 'del_flag' => DESTROY,
             ];
             $modelUser->delete($_GET['id'], $data);
+            $_SESSION['success_message'] = "Xóa thành công";
             header('Location:?controller=user&action=list');
         } else {
             ob_start();

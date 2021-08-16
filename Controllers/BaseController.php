@@ -1,6 +1,8 @@
 <?php
+
 class BaseController
 {
+
     protected $folder;
 
     function render($file, $data = array())
