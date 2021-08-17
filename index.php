@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once './Models/BaseModel.php';
 
 if (isset($_GET['controller'])) {
     $controller = $_GET['controller'];

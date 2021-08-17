@@ -1,7 +1,7 @@
 <?php
-require_once('Controllers/BaseController.php');
+require_once('app/Controllers/BaseController.php');
 
-require_once './Models/AdminModel.php';
+use App\Models\AdminModel;
 
 class LoginController extends BaseController
 {
@@ -13,18 +13,15 @@ class LoginController extends BaseController
     public function login()
     {
         if (isset($_POST['btn_submit'])) {
-
             $modelAdmin = new AdminModel();
-
             $user = isset($_POST['email']) ? $_POST['email'] : "";
             $password = isset($_POST['password']) ? $_POST['password'] : '';
-            $detail = $modelAdmin->findByEmail($user); // checkemail -> lấy pass
+            $detail = $modelAdmin->findByEmail($user);
             if (isset($detail)) {
                 $passWordAdmin = $detail->password;
                 if (!empty($user) && !empty($password)) {
                     if (md5($password) === $passWordAdmin) {
                         $result = $modelAdmin->checkLogin($user, md5($password));
-                        var_dump($result);
                         $infoUser = [
                             'id' => $result->id,
                             "email" => $result->email,
@@ -34,7 +31,6 @@ class LoginController extends BaseController
                         ];
                         if ($result) {
                             $_SESSION["admin"] = $infoUser;
-                            // var_dump($_SESSION["admin"]);
                             header("Location:?controller=admin&action=list");
                         } else {
                             echo ' ko tc';

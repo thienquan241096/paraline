@@ -1,5 +1,8 @@
 <?php
-require_once './common_const.php';
+
+namespace App\Models;
+
+require_once '../../common_const.php';
 
 interface IBaseModel
 {

@@ -1,8 +1,8 @@
 <?php
 
-require_once 'BaseModel.php';
+namespace App\Models;
 
-require_once './common_const.php';
+require_once 'BaseModel.php';
 
 class UserModel extends BaseModel
 {

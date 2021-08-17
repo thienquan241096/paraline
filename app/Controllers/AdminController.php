@@ -1,63 +1,49 @@
 <?php
-require_once('Controllers/BaseController.php');
+require_once('app/Controllers/BaseController.php');
 
-require_once './Models/AdminModel.php';
+use App\Models\AdminModel;
 
 class AdminController extends BaseController
 {
     private $roleAdmin;
-    // private $message;
 
     public function __construct()
     {
-        $this->folder = 'admin';
-        $this->roleAdmin = $_SESSION['admin']['role_type'];
-        // $this->message = $_SESSION['success_message'];
+        if ($_SESSION['admin']['role_type'] == ROLE_TYPE_SUPPERADMIN) {
+            $this->folder = 'admin';
+        } else {
+            ob_start();
+            header("Location:?controller=login&action=login");
+        }
     }
 
     public function list()
     {
-        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
-            $modelAdmin = new AdminModel();
-            $listAdmin = $modelAdmin::all();
-            $this->render('list', compact('listAdmin'));
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
-        }
+        $modelAdmin = new AdminModel();
+        $listAdmin = $modelAdmin::all();
+        $this->render('list', compact('listAdmin'));
     }
 
     public function postSearch()
     {
-        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
-            $modelAdmin = new AdminModel();
-            $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : "";
-            $listAdmin = $modelAdmin::search('name', 'email', 'like', "%$keyword%");
-            $this->render('listSearch', compact('listAdmin'));
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
-        }
+        $modelAdmin = new AdminModel();
+        $keyword = isset($_POST['keyword']) ? $_POST['keyword'] : "";
+        $listAdmin = $modelAdmin::search('name', 'email', 'like', "%$keyword%");
+        $this->render('listSearch', compact('listAdmin'));
     }
 
 
     public function getInsert()
     {
-        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
-            $this->render('insert');
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
-        }
+        $this->render('insert');
     }
 
     public function postInsert()
     {
         $modelAdmin = new AdminModel();
         if (isset($_FILES['avatar'])) {
-            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]); //tên file
-            // var_dump($target_file);
-            $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file); //chuyển vào thư mục Public/image
+            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
+            $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
         }
 
         $data = [
@@ -75,15 +61,10 @@ class AdminController extends BaseController
 
     public function getEdit()
     {
-        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
 
-            $modelAdmin = new AdminModel();
-            $detail = $modelAdmin->find($_GET['id']);
-            $this->render('edit', compact('detail'));
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
-        }
+        $modelAdmin = new AdminModel();
+        $detail = $modelAdmin->find($_GET['id']);
+        $this->render('edit', compact('detail'));
     }
     public function postEdit()
     {
@@ -92,8 +73,8 @@ class AdminController extends BaseController
         if ($_FILES['avatar']['name'] == "") {
             $target_file = $detail->avatar;
         } else {
-            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]); //tên file
-            $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file); //chuyển vào thư mục Public/image
+            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
+            $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
         }
 
         if (empty($_POST['password'])) {

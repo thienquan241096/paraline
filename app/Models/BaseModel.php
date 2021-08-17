@@ -1,5 +1,10 @@
 <?php
+
+namespace App\Models;
+
 require_once 'IBaseModel.php';
+
+use PDO;
 
 class BaseModel implements IBaseModel
 {
@@ -13,7 +18,6 @@ class BaseModel implements IBaseModel
     protected $primary_key;
     protected $key_value;
     protected $query;
-    // protected $del_flag = DEL_FALG;
 
     public function __construct()
     {
@@ -131,8 +135,6 @@ class BaseModel implements IBaseModel
         $query = "SELECT * FROM " . $model->table_name . " WHERE del_flag = $del_flag AND ($colName $condition '$searchValue'
         OR $colEmail $condition '$searchValue') ";
         $stmt = $model->conn->prepare($query);
-        // var_dump($stmt);
-        // die;
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -160,9 +162,6 @@ class BaseModel implements IBaseModel
         $model = new static();
         $model->query = "SELECT * FROM {$model->table_name} WHERE email = '$email' AND del_flag = $del_flag";
         $result = $model->getOne();
-        // echo '<pre>';
-        // var_dump($result);
-        // echo '</pre>';
         return $result;
     }
 
