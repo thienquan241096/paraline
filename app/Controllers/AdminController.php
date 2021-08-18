@@ -1,19 +1,16 @@
 <?php
 require_once('app/Controllers/BaseController.php');
+require_once './common_const.php';
 
 use App\Models\AdminModel;
 
 class AdminController extends BaseController
 {
-    private $roleAdmin;
 
     public function __construct()
     {
-        if ($_SESSION['admin']['role_type'] == ROLE_TYPE_SUPPERADMIN) {
+        if (isset($_SESSION['admin']['role_type']) && $_SESSION['admin']['role_type'] == ROLE_TYPE_SUPPERADMIN) {
             $this->folder = 'admin';
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
         }
     }
 
@@ -98,19 +95,14 @@ class AdminController extends BaseController
 
     public function delete()
     {
-        if ($this->roleAdmin == ROLE_TYPE_SUPPERADMIN) {
-            $modelAdmin = new AdminModel();
-            $detail = $modelAdmin->find($_GET['id']);
-            $data = [
-                // 'upd_id' => $_SESSION['admin']['id'],
-                'del_flag' => DESTROY,
-            ];
-            $modelAdmin->delete($_GET['id'], $data);
-            $_SESSION['success_message'] = DELETE_SUCCESS_MESSAGE;
-            header('Location:?controller=admin&action=list');
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
-        }
+        $modelAdmin = new AdminModel();
+        $detail = $modelAdmin->find($_GET['id']);
+        $data = [
+            // 'upd_id' => $_SESSION['admin']['id'],
+            'del_flag' => DESTROY,
+        ];
+        $modelAdmin->delete($_GET['id'], $data);
+        $_SESSION['success_message'] = DELETE_SUCCESS_MESSAGE;
+        header('Location:?controller=admin&action=list');
     }
 }

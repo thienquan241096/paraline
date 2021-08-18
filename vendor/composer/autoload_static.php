@@ -15,12 +15,20 @@ class ComposerStaticInit22e03e00663684adf792282bfabdbe6f
         array (
             'Facebook\\' => 9,
         ),
+        'A' => 
+        array (
+            'App\\' => 4,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Facebook\\' => 
         array (
             0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app',
         ),
     );
 

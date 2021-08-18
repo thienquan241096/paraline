@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Facebook\\' => array($vendorDir . '/facebook/graph-sdk/src/Facebook'),
+    'App\\' => array($baseDir . '/app'),
 );
