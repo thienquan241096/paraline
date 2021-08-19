@@ -1,11 +1,18 @@
 <div class="row">
-    <div class="col-8">
+    <div class="col-6">
         <form class="d-flex" action="?controller=admin&action=postSearch" method="POST">
             <input class="form-control me-2" type="search" placeholder="name , email ..." name="keyword">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div>
-    <div class="col-4">
+    <div class="col-2 d-flex justify-content-center">
+        <a name="" id="" class="btn btn-info" href="?controller=admin&action=list" role="button">List Admin</a>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
+        <a name="" id="" class="btn btn-warning" href="?controller=admin&action=listDelete" role="button">List
+            Delete</a>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
         <a name="" id="" class="btn btn-primary" href="?controller=admin&action=getInsert" role="button">Add
             Admin</a>
     </div>

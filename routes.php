@@ -2,7 +2,7 @@
 $controllers = array(
     'pages' => ['home', 'error'],
     'login' => ['login', 'logout'],
-    'admin' => ['list', 'getInsert', 'postInsert', 'getEdit', 'postEdit', 'delete', 'postSearch'],
+    'admin' => ['list', 'getInsert', 'postInsert', 'getEdit', 'postEdit', 'delete', 'postSearch', 'listDelete'],
     'user' => ['list', 'getEdit', 'postEdit', 'delete', 'login', 'logout', 'postSearch'],
 );
 

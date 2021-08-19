@@ -31,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($listAdmin as $key) { ?>
+            <?php foreach ($listAdminDelete as $key) { ?>
             <tr>
                 <th scope="row"><?= $key->id ?></th>
                 <td><?= $key->name ?></td>
@@ -50,11 +50,4 @@
             <?php } ?>
         </tbody>
     </table>
-    <?php if (isset($_SESSION['success_message']) && !empty($_SESSION['success_message'])) { ?>
-    <div class="success-message alert alert-success">
-        <?= $_SESSION['success_message']; ?></div>
-    <?php
-        unset($_SESSION['success_message']);
-    }
-    ?>
 </div>

@@ -21,6 +21,13 @@ class AdminController extends BaseController
         $this->render('list', compact('listAdmin'));
     }
 
+    public function listDelete()
+    {
+        $modelAdmin = new AdminModel();
+        $listAdminDelete = $modelAdmin->historyDelete();
+        $this->render('listDelete', compact('listAdminDelete'));
+    }
+
     public function postSearch()
     {
         $modelAdmin = new AdminModel();

@@ -20,6 +20,8 @@ interface IBaseModel
 
     public function get();
 
+    function historyDelete();
+
     public function getOne();
 
     public function findByEmail($email, $del_flag = DEL_FALG);

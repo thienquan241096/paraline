@@ -6,7 +6,7 @@ require_once 'IBaseModel.php';
 
 use PDO;
 
-class BaseModel implements IBaseModel
+abstract class BaseModel implements IBaseModel
 {
     private $db_name;
     private $db_username;
@@ -138,6 +138,8 @@ class BaseModel implements IBaseModel
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    abstract function historyDelete();
 
     public function get()
     {
