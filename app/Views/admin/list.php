@@ -50,6 +50,32 @@
             <?php } ?>
         </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="?controller=admin&action=list&page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?controller=admin&action=list&page=<?= $_SESSION['prePage'] ?>">Prev</a>
+            </li>
+            <?php
+            for ($i = 1; $i <= $_SESSION['totalPage']; $i++) {
+                echo "<li class='page-item'><a class='page-link' href='?controller=admin&action=list&page={$i}'>$i</a></li>";
+            }
+            ?>
+            <li class="page-item">
+                <a class="page-link" href="?controller=admin&action=list&page=<?= $_SESSION['nextPage'] ?>">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?controller=admin&action=list&page=<?= $_SESSION['totalPage'] ?>"
+                    aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
     <?php if (isset($_SESSION['success_message']) && !empty($_SESSION['success_message'])) { ?>
     <div class="success-message alert alert-success">
         <?= $_SESSION['success_message']; ?></div>

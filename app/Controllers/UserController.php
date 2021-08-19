@@ -9,9 +9,6 @@ class UserController extends BaseController
     {
         if (isset($_SESSION['admin'])) {
             $this->folder = 'user';
-        } else {
-            ob_start();
-            header("Location:?controller=login&action=login");
         }
     }
 
@@ -29,8 +26,6 @@ class UserController extends BaseController
         $listUser = $modelUser->search('name', 'email', 'like', "%$keyword%");
         $this->render('listSearch', compact('listUser'));
     }
-
-
 
     public function getEdit()
     {
@@ -73,19 +68,5 @@ class UserController extends BaseController
         $modelUser->delete($_GET['id'], $data);
         $_SESSION['success_message'] = DELETE_SUCCESS_MESSAGE;
         header('Location:?controller=user&action=list');
-    }
-
-
-    public function login()
-    {
-        $this->renderFontEnd('login');
-    }
-
-    public function logout()
-    {
-        session_destroy();
-        session_unset($_SESSION['access_token']);
-        ob_start();
-        header('Location:?controller=pages&action=home');
     }
 }

@@ -1,6 +1,5 @@
 <?php
 require_once('app/Controllers/BaseController.php');
-require_once './common_const.php';
 
 use App\Models\AdminModel;
 
@@ -17,7 +16,7 @@ class AdminController extends BaseController
     public function list()
     {
         $modelAdmin = new AdminModel();
-        $listAdmin = $modelAdmin::all();
+        $listAdmin = $modelAdmin->paginate();
         $this->render('list', compact('listAdmin'));
     }
 
@@ -49,18 +48,32 @@ class AdminController extends BaseController
             $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
             $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
         }
+        $err = [];
+        $listAdmin = $modelAdmin->all();
+        $email = isset($_POST['email']) ? $_POST['email'] : "";
+        foreach ($listAdmin as $value) {
+            if (empty($email)) {
+                $err['email'] = 'k để trống';
+            }
+            if ($email === $value->email) {
+                $err['email'] = 'email tồn tại';
+            }
+        }
+        if (!empty($err)) {
+            $this->render('insert', compact('err'));
+        } else {
+            $data = [
+                'name' => isset($_POST['name']) ? $_POST['name'] : "",
+                'email' => $email,
+                'password' => isset($_POST['password']) ? md5($_POST['password']) : "",
+                'avatar' => $target_file,
+                'role_type' => $_POST['role_type'],
 
-        $data = [
-            'name' => isset($_POST['name']) ? $_POST['name'] : "",
-            'email' => isset($_POST['email']) ? $_POST['email'] : "",
-            'password' => isset($_POST['password']) ? md5($_POST['password']) : "",
-            'avatar' => $target_file,
-            'role_type' => $_POST['role_type'],
-
-        ];
-        $modelAdmin::insert($data);
-        $_SESSION['success_message'] = CREATE_SUCCESS_MESSAGE;
-        header("Location:?controller=admin&action=list");
+            ];
+            $modelAdmin::insert($data);
+            $_SESSION['success_message'] = CREATE_SUCCESS_MESSAGE;
+            header("Location:?controller=admin&action=list");
+        }
     }
 
     public function getEdit()

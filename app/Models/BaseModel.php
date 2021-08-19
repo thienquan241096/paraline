@@ -46,6 +46,34 @@ abstract class BaseModel implements IBaseModel
         return $model->get();
     }
 
+    public static function paginate($del_flag = DEL_FALG, $page = LIMIT)
+    {
+        $model = new static();
+        $rowPerPage = $page;
+        $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+        $model->query = "SELECT COUNT(*) AS total FROM {$model->table_name} WHERE del_flag = $del_flag";
+        $totalRow = (int)($model->getOne()->total);
+        $totalPage = ceil($totalRow / $rowPerPage);
+
+        if ($currentPage < 1) {
+            $current_page = 1;
+        }
+
+        if ($currentPage > $totalPage) {
+            $currentPage = $totalPage;
+        }
+
+        $start = ($currentPage - 1) * $rowPerPage;
+
+        $model->query = "SELECT * FROM {$model->table_name} WHERE del_flag = $del_flag ORDER BY id DESC LIMIT {$start},{$rowPerPage}";
+
+        $_SESSION['totalPage'] = $totalPage;
+        $_SESSION['prePage'] = ($currentPage > 1) ? ($currentPage - 1) : 1;
+        $_SESSION['nextPage'] = ($currentPage < $totalPage) ? ($currentPage + 1) : $totalPage;
+
+        return $model->get();
+    }
+
     public static function insert($arr)
     {
         $model = new static();
@@ -148,8 +176,6 @@ abstract class BaseModel implements IBaseModel
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this));
         return $stmt->fetchAll();
     }
-
-
 
     public function getOne()
     {

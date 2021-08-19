@@ -28,7 +28,7 @@ class BaseController
             ob_start();
             require_once($viewFile);
             $content = ob_get_clean();
-            require_once('app/views/fontend/layout.php');
+            require_once('app/Views/fontend/layout.php');
         } else {
             header('Location: index.php?controller=pages&action=error');
         }

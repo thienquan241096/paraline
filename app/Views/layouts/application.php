@@ -13,9 +13,7 @@
 </head>
 
 <body>
-
     <div class="container">
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/paraline">Home</a>
@@ -43,11 +41,8 @@
                         </li>
                     </ul>
                 </div>
-                <!-- <form class="d-flex" action="?controller=admin&action=postSearch" method="POST">
-                    <input class="form-control me-2" type="search" placeholder="Search" name="keyword">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form> -->
             </div>
+        </nav>
     </div>
     <div class="content container">
         <?= @$content ?>

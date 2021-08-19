@@ -11,7 +11,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="">email</label>
-                    <input type="text" class="form-control" name="email"
+                    <input type="text" class="form-control" name="email" disabled
                         value='<?= isset($detail->email) ? $detail->email : "" ?>'>
                 </div>
             </div>

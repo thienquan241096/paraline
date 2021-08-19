@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-require_once './common_const.php';
-
 interface IBaseModel
 {
     public static function all($del_flag = DEL_FALG);
@@ -23,6 +21,8 @@ interface IBaseModel
     function historyDelete();
 
     public function getOne();
+
+    public static function paginate($del_flag = DEL_FALG, $page);
 
     public function findByEmail($email, $del_flag = DEL_FALG);
 }

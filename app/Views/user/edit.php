@@ -18,7 +18,7 @@
             <div class="col-6">
                 <div class="form-group">
                     <label for="">facebook_id</label>
-                    <input type="text" class="form-control" name="facebook_id"
+                    <input type="text" class="form-control" name="facebook_id" disabled
                         value='<?= isset($detail->facebook_id) ? $detail->facebook_id : "" ?>'>
                 </div>
             </div>

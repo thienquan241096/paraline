@@ -4,8 +4,8 @@ $controllers = array(
     'login' => ['login', 'logout'],
     'admin' => ['list', 'getInsert', 'postInsert', 'getEdit', 'postEdit', 'delete', 'postSearch', 'listDelete'],
     'user' => ['list', 'getEdit', 'postEdit', 'delete', 'login', 'logout', 'postSearch'],
+    'loginUser' => ['login', 'logout'],
 );
-
 if (!array_key_exists($controller, $controllers) || !in_array($action, $controllers[$controller])) {
     $controller = 'pages';
     $action = 'error';

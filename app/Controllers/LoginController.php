@@ -18,8 +18,8 @@ class LoginController extends BaseController
             $password = isset($_POST['password']) ? $_POST['password'] : '';
             $detail = $modelAdmin->findByEmail($user);
             if (isset($detail)) {
-                $passWordAdmin = $detail->password;
                 if (!empty($user) && !empty($password)) {
+                    $passWordAdmin = $detail->password;
                     if (md5($password) === $passWordAdmin) {
                         $result = $modelAdmin->checkLogin($user, md5($password));
                         $infoUser = [
@@ -31,7 +31,7 @@ class LoginController extends BaseController
                         ];
                         if ($result) {
                             $_SESSION["admin"] = $infoUser;
-                            header("Location:?controller=admin&action=list");
+                            header("Location:?controller=user&action=list");
                         } else {
                             echo ' ko tc';
                             $_SESSION['admin'] = false;

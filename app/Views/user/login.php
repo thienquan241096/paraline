@@ -1,5 +1,6 @@
 <?php
-require_once('Models/UserModel.php');
+
+use App\Models\UserModel;
 
 if (!session_id()) {
     session_start();
@@ -14,12 +15,8 @@ $facebook = new \Facebook\Facebook([
 $facebook_output = '';
 
 $facebookHelper = $facebook->getRedirectLoginHelper();
-// echo '<pre>';
-// var_dump($facebookHelper);
-// die;
 
 if (isset($_GET['code'])) {
-    // var_dump(1);
     if (isset($_SESSION['access_token'])) {
         $accessToken = $_SESSION['access_token'];
     } else {
@@ -29,8 +26,6 @@ if (isset($_GET['code'])) {
 
         $facebook->setDefaultAccessToken($_SESSION['access_token']);
     }
-    // var_dump($facebook->setDefaultAccessToken($_SESSION['access_token']));
-    // die;
 
     $_SESSION['id'] = '';
     $_SESSION['name'] = '';
@@ -82,9 +77,7 @@ if (isset($_GET['code'])) {
 } else {
     $facebookPermissions = ['email']; // quyền
 
-    $facebookLoginUrl = $facebookHelper->getLoginUrl('http://localhost/paraline/?controller=user&action=login');
-    var_dump($facebookLoginUrl);
-    // hiển thị btn
+    $facebookLoginUrl = $facebookHelper->getLoginUrl('http://localhost/paraline/?controller=loginUser&action=login');
     $facebookLoginUrl = '<div align="center"><a href="' . $facebookLoginUrl . '"><img src="php-login-with-facebook.gif" /></a></div>';
 }
 
@@ -101,7 +94,7 @@ if (isset($_GET['code'])) {
             echo '<img src="' . $_SESSION["image"] . '" class="img-responsive img-circle img-thumbnail" />';
             echo '<h3><b>Name :</b> ' . $_SESSION['name'] . '</h3>';
             echo '<h3><b>Email :</b> ' . $_SESSION['email_address'] . '</h3>';
-            echo '<h3><a href="?controller=user&action=logout">Logout</h3></div>';
+            echo '<h3><a href="?controller=loginUser&action=logout">Logout</h3></div>';
         }
         ?>
     </div>

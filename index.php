@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once './vendor/autoload.php';
+require_once './common_const.php';
 
 if (isset($_GET['controller'])) {
     $controller = $_GET['controller'];

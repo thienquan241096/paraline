@@ -1,13 +1,5 @@
-<?php
-// $admin  = new Admin();
-// $listAdmin = $admin->all();
-?>
 <div class="container">
     <form action="?controller=admin&action=postInsert" method="post" enctype="multipart/form-data">
-        <!-- <div class="form-group">
-            <label for="">ID</label>
-            <input type="number" class="form-control" name="id" placeholder="">
-        </div> -->
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
