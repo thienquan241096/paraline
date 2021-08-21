@@ -78,8 +78,8 @@ abstract class BaseModel implements IBaseModel
     {
         $model = new static();
 
-        $arr['ins_id'] = $_SESSION['admin']['id'];
-        $arr['upd_id'] = $_SESSION['admin']['id'];
+        $arr['ins_id'] = isset($_SESSION['admin']['id']) ? $_SESSION['admin']['id'] : "";
+        $arr['upd_id'] = isset($_SESSION['admin']['id']) ? $_SESSION['admin']['id'] : "";
         $arr['ins_datetime'] = INS_DATETIME;
         $arr['upd_datetime'] = UPD_DATETIME;
         $arr['del_flag'] = DEL_FALG;
@@ -97,8 +97,8 @@ abstract class BaseModel implements IBaseModel
 
         $model->query = rtrim($model->query, ',');
         $model->query .= ')';
-        $stmt = $model->conn->prepare($model->query);
-        $stmt->execute($arr);
+        $statement = $model->conn->prepare($model->query);
+        $statement->execute($arr);
 
         return $model->conn->lastInsertId();
     }
@@ -116,9 +116,9 @@ abstract class BaseModel implements IBaseModel
 
         $model->query .= " WHERE id = $id";
 
-        $stmt = $model->conn->prepare($model->query);
+        $statement = $model->conn->prepare($model->query);
 
-        $stmt->execute($params);
+        $statement->execute($params);
 
         return $id;
     }
@@ -150,9 +150,9 @@ abstract class BaseModel implements IBaseModel
 
         $model->query .= " WHERE id = $id";
 
-        $stmt = $model->conn->prepare($model->query);
+        $statement = $model->conn->prepare($model->query);
 
-        $stmt->execute($params);
+        $statement->execute($params);
 
         return $id;
     }
@@ -162,27 +162,36 @@ abstract class BaseModel implements IBaseModel
         $model = new static();
         $query = "SELECT * FROM " . $model->table_name . " WHERE del_flag = $del_flag AND ($colName $condition '$searchValue'
         OR $colEmail $condition '$searchValue') ";
-        $stmt = $model->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll();
+        $statement = $model->conn->prepare($query);
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
+    public static function findEmailByID($id, $del_flag = DEL_FALG)
+    {
+        $model = new static();
+
+        $model->query = "SELECT email FROM {$model->table_name} WHERE {$model->primary_key} != $id AND del_flag = $del_flag";
+        $result = $model->get();
+        return $result;
     }
 
     abstract function historyDelete();
 
     public function get()
     {
-        $stmt = $this->conn->prepare($this->query);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        return $stmt->fetchAll();
+        $statement = $this->conn->prepare($this->query);
+        $statement->execute();
+        $statement->setFetchMode(PDO::FETCH_CLASS, get_class($this));
+        return $statement->fetchAll();
     }
 
     public function getOne()
     {
-        $stmt = $this->conn->prepare($this->query);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, get_class($this));
-        return $stmt->fetch();
+        $statement = $this->conn->prepare($this->query);
+        $statement->execute();
+        $statement->setFetchMode(PDO::FETCH_CLASS, get_class($this));
+        return $statement->fetch();
     }
 
     public function findByEmail($email, $del_flag = DEL_FALG)

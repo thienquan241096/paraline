@@ -12,7 +12,7 @@ define("COL_NAME", 'name');
 define("COL_EMAIL", 'email');
 define("CREATE_SUCCESS_MESSAGE", 'Thêm mới thành công');
 define("UPDATE_SUCCESS_MESSAGE", 'Update thành công');
-define("DELETE_SUCCESS_MESSAGE", 'Thêm mới thành công');
+define("DELETE_SUCCESS_MESSAGE", 'Xóa thành công');
 
 define('DB_NAME', 'train_paraline');
 define('DB_USERNAME', 'root');

@@ -31,15 +31,9 @@ if (isset($_GET['code'])) {
     $_SESSION['name'] = '';
     $_SESSION['email_address'] = '';
     $_SESSION['image'] = '';
-
-
-    $graph_response = $facebook->get("/me?fields=name,email", $accessToken);
-
+    $graph_response = $facebook->get("/me?fields=name,email,picture", $accessToken);
     $facebookUserInfo = $graph_response->getGraphUser();
-
     $modelUser = new UserModel();
-
-
     if (!empty($facebookUserInfo)) {
         if (!empty($facebookUserInfo['id'])) {
             $_SESSION['image'] = 'http://graph.facebook.com/' . $facebookUserInfo['id'] . '/picture';
@@ -69,7 +63,6 @@ if (isset($_GET['code'])) {
                 'facebook_id' => $facebook_id,
                 'avatar' => $avatar,
                 'status' => STATUS,
-                'del_flag' => DEL_FALG,
             ];
             $modelUser->insert($data);
         }
@@ -78,7 +71,7 @@ if (isset($_GET['code'])) {
     $facebookPermissions = ['email']; // quyền
 
     $facebookLoginUrl = $facebookHelper->getLoginUrl('http://localhost/paraline/?controller=loginUser&action=login');
-    $facebookLoginUrl = '<div align="center"><a href="' . $facebookLoginUrl . '"><img src="php-login-with-facebook.gif" /></a></div>';
+    $facebookLoginUrl = '<div align="center"><a href="' . $facebookLoginUrl . '"><img src="https://toppng.com/uploads/preview/login-with-facebook-button-png-facebook-login-button-transparent-115629715576ytwomjwfk.png" width="100px" /></a></div>';
 }
 
 ?>
@@ -89,11 +82,25 @@ if (isset($_GET['code'])) {
         <?php
         if (isset($facebookLoginUrl)) {
             echo $facebookLoginUrl;
+            echo '<div class="container">
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control">
+                </div>
+                <button type="submit" name="btn_submit" class="btn btn-primary">Login</button>
+            </form>
+            </div>';
         } else {
-            echo '<div class="panel-heading">Welcome User</div><div class="panel-body">';
-            echo '<img src="' . $_SESSION["image"] . '" class="img-responsive img-circle img-thumbnail" />';
-            echo '<h3><b>Name :</b> ' . $_SESSION['name'] . '</h3>';
-            echo '<h3><b>Email :</b> ' . $_SESSION['email_address'] . '</h3>';
+            // echo '<div class="panel-heading">Welcome User</div><div class="panel-body">';
+            // echo '<img src="' . $_SESSION["image"] . '" class="img-responsive img-circle img-thumbnail" />';
+            // echo '<h3><b>Name :</b> ' . $_SESSION['name'] . '</h3>';
+            // echo '<h3><b>Email :</b> ' . $_SESSION['email_address'] . '</h3>';
+            echo '<h3><a href="?controller=loginUser&action=info">Chi tiết người dùng</h3></div>';
             echo '<h3><a href="?controller=loginUser&action=logout">Logout</h3></div>';
         }
         ?>

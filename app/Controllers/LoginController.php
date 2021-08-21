@@ -1,4 +1,5 @@
 <?php
+
 require_once('app/Controllers/BaseController.php');
 
 use App\Models\AdminModel;
@@ -33,7 +34,6 @@ class LoginController extends BaseController
                             $_SESSION["admin"] = $infoUser;
                             header("Location:?controller=user&action=list");
                         } else {
-                            echo ' ko tc';
                             $_SESSION['admin'] = false;
                         }
                     }

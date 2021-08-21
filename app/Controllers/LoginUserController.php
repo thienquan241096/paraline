@@ -1,13 +1,24 @@
 <?php
-require_once('app/Controllers/BaseController.php');
 
-use App\Models\UserModel;
+use App\Models\AdminModel;
+
+require_once('app/Controllers/BaseController.php');
 
 class LoginUserController extends BaseController
 {
     public function __construct()
     {
         $this->folder = 'user';
+    }
+
+    public function info()
+    {
+        if (isset($_SESSION['id'])) {
+            $this->renderFontEnd('info');
+        } else {
+            ob_start();
+            header("Location:?controller=pages&action=home");
+        }
     }
 
     public function login()

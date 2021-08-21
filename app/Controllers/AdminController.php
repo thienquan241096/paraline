@@ -43,14 +43,12 @@ class AdminController extends BaseController
 
     public function postInsert()
     {
-        $modelAdmin = new AdminModel();
-        if (isset($_FILES['avatar'])) {
-            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
-            $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
-        }
+        $arrTypeImg = ['image/bmp', 'image/jpeg', 'image/png'];
+
         $err = [];
-        $listAdmin = $modelAdmin->all();
+        $listAdmin = AdminModel::all();
         $email = isset($_POST['email']) ? $_POST['email'] : "";
+
         foreach ($listAdmin as $value) {
             if (empty($email)) {
                 $err['email'] = 'k để trống';
@@ -59,9 +57,23 @@ class AdminController extends BaseController
                 $err['email'] = 'email tồn tại';
             }
         }
+
+        if (isset($_FILES['avatar'])) {
+            if (!in_array($_FILES['avatar']['type'], $arrTypeImg)) {
+                $err['avatar'] = 'k đúng định dạng ảnh';
+            }
+            if ($_FILES['avatar']['size'] > 5000000) {
+                $err['avatar'] = 'nhập lại';
+            }
+        }
+
         if (!empty($err)) {
             $this->render('insert', compact('err'));
         } else {
+            if (isset($_FILES['avatar'])) {
+                $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
+                $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
+            }
             $data = [
                 'name' => isset($_POST['name']) ? $_POST['name'] : "",
                 'email' => $email,
@@ -70,7 +82,7 @@ class AdminController extends BaseController
                 'role_type' => $_POST['role_type'],
 
             ];
-            $modelAdmin::insert($data);
+            AdminModel::insert($data);
             $_SESSION['success_message'] = CREATE_SUCCESS_MESSAGE;
             header("Location:?controller=admin&action=list");
         }
@@ -78,39 +90,62 @@ class AdminController extends BaseController
 
     public function getEdit()
     {
-
         $modelAdmin = new AdminModel();
         $detail = $modelAdmin->find($_GET['id']);
         $this->render('edit', compact('detail'));
     }
     public function postEdit()
     {
-        $modelAdmin = new AdminModel();
-        $detail = $modelAdmin->find($_GET['id']);
+        $arrTypeImg = ['image/bmp', 'image/jpeg', 'image/png'];
+        $err = [];
+        $detail = AdminModel::find($_GET['id']);
+        $email = isset($_POST['email']) ? $_POST['email'] : "";
+        $listEmail = AdminModel::findEmailByID($_GET['id']);
+        foreach ($listEmail as $value) {
+            if (empty($email)) {
+                $err['email'] = 'k để trống';
+            }
+            if ($email === $value->email) {
+                $err['email'] = 'email tồn tại';
+            }
+        }
+
         if ($_FILES['avatar']['name'] == "") {
             $target_file = $detail->avatar;
+            $err = "";
         } else {
-            $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
-            $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
+            if (!in_array($_FILES['avatar']['type'], $arrTypeImg)) {
+                $err['avatar'] = 'k đúng định dạng ảnh';
+            }
+            if ($_FILES['avatar']['size'] > 500000) {
+                $err['avatar'] = 'nhập lại';
+            }
+            if (in_array($_FILES['avatar']['type'], $arrTypeImg) && $_FILES['avatar']['size'] < 500000) {
+                $err = "";
+                $target_file = TARGET_DIR . basename($_FILES["avatar"]["name"]);
+                $move = move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
+            }
         }
 
-        if (empty($_POST['password'])) {
-            $password = $detail->password;
+        if (!empty($err)) {
+            $this->render('edit', compact('err', 'detail'));
         } else {
-            $password = md5($_POST['password']);
+            if (empty($_POST['password'])) {
+                $password = $detail->password;
+            } else {
+                $password = md5($_POST['password']);
+            }
+            $data = [
+                'name' => isset($_POST['name']) ? $_POST['name'] : "",
+                'email' => $email,
+                'password' => $password,
+                'avatar' => $target_file,
+                'role_type' => $_POST['role_type'],
+            ];
+            AdminModel::update($_GET['id'], $data);
+            $_SESSION['success_message'] = UPDATE_SUCCESS_MESSAGE;
+            header('Location:?controller=admin&action=list');
         }
-
-        $data = [
-            'name' => isset($_POST['name']) ? $_POST['name'] : "",
-            'email' => isset($_POST['email']) ? $_POST['email'] : "",
-            'password' => $password,
-            'avatar' => $target_file,
-            'role_type' => $_POST['role_type'],
-        ];
-
-        $modelAdmin->update($_GET['id'], $data);
-        $_SESSION['success_message'] = UPDATE_SUCCESS_MESSAGE;
-        header('Location:?controller=admin&action=list');
     }
 
     public function delete()
@@ -118,7 +153,6 @@ class AdminController extends BaseController
         $modelAdmin = new AdminModel();
         $detail = $modelAdmin->find($_GET['id']);
         $data = [
-            // 'upd_id' => $_SESSION['admin']['id'],
             'del_flag' => DESTROY,
         ];
         $modelAdmin->delete($_GET['id'], $data);

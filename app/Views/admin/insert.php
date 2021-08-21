@@ -24,6 +24,7 @@
                 <div class="form-group">
                     <label for="">avatar</label>
                     <input type="file" class="form-control" name="avatar" placeholder="">
+                    <p class='text-danger'><?= isset($err['avatar']) ? $err['avatar'] : "" ?></p>
                 </div>
             </div>
             <div class="col-12">
